@@ -1,4 +1,4 @@
-package rs.agroshop.Agro_Shop;
+package rs.agroshop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

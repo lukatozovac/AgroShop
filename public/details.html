@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroShop</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="css/global.css">
+</head>
+<body class="bg-light">
+
+    <div class="bg-dark text-light py-1">
+        <div class="container d-flex justify-content-end" style="font-size: 0.85rem;">
+            <div>
+                <a href="#" class="text-light text-decoration-none me-3 link-warning">
+                    <i class="bi bi-person me-1"></i>Login
+                </a>
+                <a href="#" class="text-light text-decoration-none link-warning">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-white shadow-sm py-3 mb-4 border-bottom border-success border-3">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <a href="/" class="text-decoration-none">
+                        <h2 class="text-success fw-bold m-0">Agro<span class="text-dark">Shop</span></h2>
+                    </a>
+                </div>
+
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <form class="d-flex">
+                        <div class="input-group">
+                            <input type="text" class="form-control border-success" placeholder="Enter machine name, brand or model..." aria-label="Pretraga">
+                            <button class="btn btn-success px-4" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-3 text-md-end">
+                    <a href="#" class="btn btn-warning position-relative fw-bold">
+                        <i class="bi bi-cart3 me-1"></i> Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div id="details-container"></div>
+    </main>
+
+    <footer class="bg-white text-dark pt-5 pb-3 mt-5 border-top border-success border-3 shadow-lg">
+        <div class="container">
+            <div class="row g-4">
+                
+                <div class="col-md-4">
+                    <h5 class="text-success fw-bold mb-3">Agro<span class="text-dark">Shop</span></h5>
+                    <p class="text-muted small lh-base">
+                        The leading online store for selling, buying and agricultural vehicles and machines. We work to connect sellers and buyers across the region.
+                    </p>
+                </div>
+
+                <div class="col-md-2">
+                    <h6 class="text-dark fw-bold mb-3 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">Clients</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">List of brands</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">User experience</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2">
+                    <h6 class="text-dark fw-bold mb-3 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">About us</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">Who are we</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">Terms of use</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">Privacy policy</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none link-success">Help and FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h6 class="text-dark fw-bold mb-3 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">Technical support</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li class="mb-2"><i class="bi bi-geo-alt text-success me-2"></i>Cara Dušana 22, Nova Pazova</li>
+                        <li class="mb-2"><i class="bi bi-telephone text-success me-2"></i>+381 064 320 96 83</li>
+                        <li class="mb-2"><i class="bi bi-envelope text-success me-2"></i>tsupport@agroshop.rs</li>
+                        <li class="mb-2"><i class="bi bi-clock text-success me-2"></i>Work time: Mon-Fri 08:00 - 16:00</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr class="border-secondary opacity-25 my-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">
+                        &copy; 2026 <span class="text-success fw-bold">AgroShop</span> All rights reserved. Developed for University Singidunum.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            
+    <script src="js/utils.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", loadMachineDetails);
+</script>
+</body>
+</html>
