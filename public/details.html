@@ -110,12 +110,20 @@
         </div>
     </footer>
 
+    <div id="myLightbox" class="lightbox">
+    <span class="close-btn" onclick="closeLightbox()">&times;</span>
+    <button class="lightbox-prev" onclick="changeLightboxSlide(-1)">&#10094;</button>
+    <img class="lightbox-content" id="fullImg">
+    <button class="lightbox-next" onclick="changeLightboxSlide(1)">&#10095;</button>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
             
     <script src="js/utils.js"></script>
     <script>
+    console.log("Ucitavam detalje...");
     document.addEventListener("DOMContentLoaded", loadMachineDetails);
-</script>
+    </script>
 </body>
 </html>

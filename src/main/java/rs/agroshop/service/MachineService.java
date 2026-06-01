@@ -28,7 +28,8 @@ public class MachineService {
         return machineRepository.findByCategory_CategoryName(categoryName);
     }
 
-    public Machine findByName(String name) {
-    return machineRepository.findByName(name);
+    public Machine findMachineByName(String name) {
+    return machineRepository.findByName(name)
+            .orElseThrow(() -> new RuntimeException("Mašina sa tim imenom nije pronađena"));
     }
 }

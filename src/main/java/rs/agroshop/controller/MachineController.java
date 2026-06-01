@@ -30,8 +30,8 @@ public class MachineController {
 
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping(value = "/name/{name}")
     public Machine getByName(@PathVariable String name) {
-    return machineService.findByName(name);
+    return machineService.findMachineByName(name);
     }
 }

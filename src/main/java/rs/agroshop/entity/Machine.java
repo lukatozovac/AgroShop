@@ -3,11 +3,16 @@ package rs.agroshop.entity;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name  = "machine")
@@ -45,4 +50,11 @@ public class Machine {
     @JoinColumn(name = "manufacturer_id", nullable = false)
     private Manufacturer manufacturer;
 
+    @OneToMany(mappedBy = "machine", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Specification> specifications = new HashSet<>();
+
+    @OneToMany(mappedBy = "machine", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Picture> pictures = new HashSet<>();
 }

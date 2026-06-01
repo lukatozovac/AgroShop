@@ -1,6 +1,6 @@
 package rs.agroshop.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class Specification {
     private String value;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     @JoinColumn(name="machine_id", nullable = false)
     private Machine machine;
 }
