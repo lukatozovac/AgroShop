@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// 1. Funkcija za učitavanje kategorija podeljenih na Vozila i Mašine (za index.html)
+// 1. Funkcija za učitavanje kategorija podeljenih na Vozila i Mašine
 function loadCategories() {
     const vehicleContainer = document.getElementById('vehicle-container');
     const machineContainer = document.getElementById('machine-container');
@@ -37,7 +37,7 @@ function loadCategories() {
         .catch(error => console.error('Error:', error));
 }
 
-// 2. Funkcija za učitavanje mašina (OVO TI JE FALILO!)
+// 2. Funkcija za učitavanje mašina
 function loadMachines() {
     const params = new URLSearchParams(window.location.search);
     const categoryName = params.get('categoryName');
