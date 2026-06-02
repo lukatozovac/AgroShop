@@ -19,35 +19,6 @@
 CREATE DATABASE IF NOT EXISTS `database_agro_shop` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `database_agro_shop`;
 
--- Dumping structure for table database_agro_shop.cart
-CREATE TABLE IF NOT EXISTS `cart` (
-  `cart_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`cart_id`),
-  KEY `fk_cart_user_id` (`user_id`),
-  CONSTRAINT `fk_cart_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.cart: ~0 rows (approximately)
-
--- Dumping structure for table database_agro_shop.cart_item
-CREATE TABLE IF NOT EXISTS `cart_item` (
-  `cart_item_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `cart_id` int(20) unsigned NOT NULL,
-  `unit_id` int(20) unsigned NOT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `sub_total` decimal(38,2) DEFAULT NULL,
-  `unit_price` decimal(38,2) DEFAULT NULL,
-  PRIMARY KEY (`cart_item_id`),
-  KEY `fk_cart_item_cart_id` (`cart_id`),
-  KEY `fk_cart_item_unit_id` (`unit_id`),
-  CONSTRAINT `fk_cart_item_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_cart_item_unit_id` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`unit_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.cart_item: ~0 rows (approximately)
-
 -- Dumping structure for table database_agro_shop.category
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -226,35 +197,6 @@ INSERT INTO `manufacturer` (`manufacturer_id`, `name`, `made_in`, `logo`) VALUES
 	(48, 'Zetor', 'Czech Republic', '/images/manufacturer/zetor.jpg'),
 	(49, 'Ziegler', 'Germany', '/images/manufacturer/ziegler.jpg'),
 	(50, 'Zunhammer', 'Germany', '/images/manufacturer/zunhammer.jpg');
-
--- Dumping structure for table database_agro_shop.orders
-CREATE TABLE IF NOT EXISTS `orders` (
-  `orders_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  `total_price` decimal(10,2) unsigned NOT NULL,
-  `status` enum('Pending','Paid') NOT NULL,
-  `user_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`orders_id`),
-  KEY `fk_orders_user_id` (`user_id`),
-  CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.orders: ~0 rows (approximately)
-
--- Dumping structure for table database_agro_shop.orders_item
-CREATE TABLE IF NOT EXISTS `orders_item` (
-  `orders_item_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `price` decimal(10,2) NOT NULL,
-  `orders_id` int(20) unsigned NOT NULL,
-  `unit_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`orders_item_id`),
-  KEY `fk_orders_item_orders_id` (`orders_id`),
-  KEY `fk_oders_item_unit_id` (`unit_id`),
-  CONSTRAINT `fk_oders_item_unit_id` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`unit_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_orders_item_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`orders_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.orders_item: ~0 rows (approximately)
 
 -- Dumping structure for table database_agro_shop.picture
 CREATE TABLE IF NOT EXISTS `picture` (
@@ -583,23 +525,6 @@ INSERT INTO `picture` (`picture_id`, `path`, `machine_id`) VALUES
 	(313, '/images/machines/313.jpg', 63),
 	(314, '/images/machines/314.jpg', 63),
 	(315, '/images/machines/315.jpg', 63);
-
--- Dumping structure for table database_agro_shop.review
-CREATE TABLE IF NOT EXISTS `review` (
-  `review_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `rating` int(11) NOT NULL,
-  `comment` text NOT NULL,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(20) unsigned NOT NULL,
-  `machine_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`review_id`),
-  KEY `fk_review_user_id` (`user_id`),
-  KEY `fk_review_machine_id` (`machine_id`),
-  CONSTRAINT `fk_review_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`machine_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_review_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.review: ~0 rows (approximately)
 
 -- Dumping structure for table database_agro_shop.specification
 CREATE TABLE IF NOT EXISTS `specification` (
@@ -982,104 +907,6 @@ INSERT INTO `specification` (`specification_id`, `name`, `value`, `machine_id`) 
 	(366, 'Drive Type', 'PTO', 63),
 	(367, 'Application', 'Grain stores, drying', 63),
 	(368, 'Hopper', 'Folding hopper', 63);
-
--- Dumping structure for table database_agro_shop.unit
-CREATE TABLE IF NOT EXISTS `unit` (
-  `unit_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `serial_number` varchar(6) NOT NULL,
-  `availability` tinyint(1) NOT NULL,
-  `machine_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`unit_id`),
-  UNIQUE KEY `uq_unit_serial_number` (`serial_number`),
-  KEY `fk_unit_machine_id` (`machine_id`),
-  CONSTRAINT `fk_unit_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`machine_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.unit: ~63 rows (approximately)
-INSERT INTO `unit` (`unit_id`, `serial_number`, `availability`, `machine_id`) VALUES
-	(1, '000001', 1, 1),
-	(2, '000002', 1, 2),
-	(3, '000003', 1, 3),
-	(4, '000004', 1, 4),
-	(5, '000005', 1, 5),
-	(6, '000006', 1, 6),
-	(7, '000007', 1, 7),
-	(8, '000008', 1, 8),
-	(9, '000009', 1, 9),
-	(10, '000010', 1, 10),
-	(11, '000011', 1, 11),
-	(12, '000012', 1, 12),
-	(13, '000013', 1, 13),
-	(14, '000014', 1, 14),
-	(15, '000015', 1, 15),
-	(16, '000016', 1, 16),
-	(17, '000017', 1, 17),
-	(18, '000018', 1, 18),
-	(19, '000019', 1, 19),
-	(20, '000020', 1, 20),
-	(21, '000021', 1, 21),
-	(22, '000022', 1, 22),
-	(23, '000023', 1, 23),
-	(24, '000024', 1, 24),
-	(25, '000025', 1, 25),
-	(26, '000026', 1, 26),
-	(27, '000027', 1, 27),
-	(28, '000028', 1, 28),
-	(29, '000029', 1, 29),
-	(30, '000030', 1, 30),
-	(31, '000031', 1, 31),
-	(32, '000032', 1, 32),
-	(33, '000033', 1, 33),
-	(34, '000034', 1, 34),
-	(35, '000035', 1, 35),
-	(36, '000036', 1, 36),
-	(37, '000037', 1, 37),
-	(38, '000038', 1, 38),
-	(39, '000039', 1, 39),
-	(40, '000040', 1, 40),
-	(41, '000041', 1, 41),
-	(42, '000042', 1, 42),
-	(43, '000043', 1, 43),
-	(44, '000044', 1, 44),
-	(45, '000045', 1, 45),
-	(46, '000046', 1, 46),
-	(47, '000047', 1, 47),
-	(48, '000048', 1, 48),
-	(49, '000049', 1, 49),
-	(50, '000050', 1, 50),
-	(51, '000051', 1, 51),
-	(52, '000052', 1, 52),
-	(53, '000053', 1, 53),
-	(54, '000054', 1, 54),
-	(55, '000055', 1, 55),
-	(56, '000056', 1, 56),
-	(57, '000057', 1, 57),
-	(58, '000058', 1, 58),
-	(59, '000059', 1, 59),
-	(60, '000060', 1, 60),
-	(61, '000061', 1, 61),
-	(62, '000062', 1, 62),
-	(63, '000063', 1, 63);
-
--- Dumping structure for table database_agro_shop.user
-CREATE TABLE IF NOT EXISTS `user` (
-  `user_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `phone_number` varchar(50) NOT NULL,
-  `role` enum('Administrator','Customer') NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `uq_user_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Dumping data for table database_agro_shop.user: ~4 rows (approximately)
-INSERT INTO `user` (`user_id`, `name`, `surname`, `email`, `password`, `phone_number`, `role`) VALUES
-	(1, 'Luka', 'Todorovic', 'luka.todorovic@gmail.com', 'Pa$$w0rd', '064/1234567', 'Administrator'),
-	(2, 'Pera', 'Peric', 'pera.peric@gmail.com', '12345678', '064/2345678', 'Customer'),
-	(3, 'Sima', 'Simic', 'sima.simic@gmail.com', '12345678', '064/3456789', 'Customer'),
-	(4, 'Laza', 'Lazic', 'laza.lazic@gmail.com', '12345678', '064/4567890', 'Customer');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

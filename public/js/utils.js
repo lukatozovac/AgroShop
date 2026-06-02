@@ -15,13 +15,13 @@ function loadCategories() {
 
             data.forEach(cat => {
                 const cardHTML = `
-                    <div class="col-md-4">
+                    <div class="col-md-3 mb-4">
                         <div class="card h-100 shadow-sm border-0">
                             <img src="${cat.picture}" class="card-img-top" alt="${cat.categoryName}">
                             <div class="card-body">
                                 <h5 class="card-title text-dark fw-bold">${cat.categoryName}</h5>
                                 <p class="card-text small text-muted">${cat.description}</p>
-                                <a href="machines.html?categoryName=${encodeURIComponent(cat.categoryName)}" class="btn btn-outline-success">View Machines</a>
+                                <a href="machines.html?categoryName=${encodeURIComponent(cat.categoryName)}" class="btn btn-success">View Machines</a>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@ function loadMachines() {
             container.innerHTML = '';
             data.forEach(m => {
                 container.innerHTML += `
-                    <div class="col-md-4">
+                    <div class="col-md-3 mb-4">
                         <div class="card mb-4">
                             <img src="${m.iconPath}" class="card-img-top" alt="${m.name}">
                             <div class="card-body">
@@ -160,3 +160,4 @@ function plusSlides(n) {
     slideIndex = (slideIndex + n + slides.length) % slides.length;
     slides[slideIndex].classList.add("active");
 }
+
