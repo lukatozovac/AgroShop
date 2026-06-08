@@ -4,51 +4,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.agroshop.entity.Manufacturer;
-import rs.agroshop.service.ManufacturerService;
-import java.util.HashMap;
+import rs.agroshop.entity.Picture;
+import rs.agroshop.service.PictureService;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/manufacturers")
+@RequestMapping("/api/pictures")
 @CrossOrigin(origins = "*")
-public class ManufacturerController {
+public class PictureController {
     
     @Autowired
-    private ManufacturerService manufacturerService;
+    private PictureService pictureService;
 
 // --------------------------------------------------------------------------------------- //    
-// ------------------------------ Get methods for read operations ------------------------ //
-    
+// --------------------------- Get methods for read operations --------------------------- //
+
     @GetMapping
-    public ResponseEntity<List<Manufacturer>> getAll() {
+    public ResponseEntity<List<Picture>> getAll() {
         try {
-            List<Manufacturer> manufacturers = manufacturerService.findAll();
-            return ResponseEntity.ok(manufacturers);
+            List<Picture> pictures = pictureService.findAll();
+            return ResponseEntity.ok(pictures);
         }
         
         catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Manufacturer> getById(@PathVariable Integer id) {
+    public ResponseEntity<Picture> getById(@PathVariable Integer id) {
         try {
-            Manufacturer manufacturer = manufacturerService.findById(id);
-            return ResponseEntity.ok(manufacturer);
+            Picture picture = pictureService.findById(id);
+            return ResponseEntity.ok(picture);
         }
-
+        
         catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
-// --------------------------- Post methods for create operations ------------------------ //
+// -------------------------- Post methods for create operations ------------------------- //
 
     @PostMapping
-    public ResponseEntity<?> createManufacturer(@RequestBody Manufacturer manufacturer) {
+    public ResponseEntity<?> createPicture(@RequestBody Picture picture) {
         try {
-            Manufacturer createdManufacturer = manufacturerService.createManufacturer(manufacturer);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdManufacturer);
+            Picture createdPicture = pictureService.createPicture(picture);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPicture);
         }
         
         catch (RuntimeException e) {
@@ -59,19 +59,19 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during creating a new manufacturer: " + e.getMessage());
+            error.put("error", "Error during adding a new picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
 // --------------------------------------------------------------------------------------- //    
-// ---------------------------- Put methods for update operations ------------------------ //
+// -------------------------- Put methods for update operations -------------------------- //
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateManufacturer(@PathVariable Integer id, @RequestBody Manufacturer manufacturerDetails) {
+    public ResponseEntity<?> updatePicture(@PathVariable Integer id, @RequestBody Picture pictureDetails) {
         try {
-            Manufacturer updatedManufacturer = manufacturerService.updateManufacturer(id, manufacturerDetails);
-            return ResponseEntity.ok(updatedManufacturer);
+            Picture updatedPicture = pictureService.updatePicture(id, pictureDetails);
+            return ResponseEntity.ok(updatedPicture);
         }
         
         catch (RuntimeException e) {
@@ -82,20 +82,20 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during updating manufacturer: " + e.getMessage());
+            error.put("error", "Error during updating picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
 // --------------------------------------------------------------------------------------- //    
-// --------------------------------- Delete operations ----------------------------------- //
+// ---------------------------------- Delete operations ---------------------------------- //
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteManufacturer(@PathVariable Integer id) {
+    public ResponseEntity<?> deletePicture(@PathVariable Integer id) {
         try {
-            manufacturerService.deleteManufacturer(id);
+            pictureService.deletePicture(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Manufacturer with ID " + id + " is successfully deleted.");
+            response.put("message", "Picture with ID " + id + " is successfully deleted.");
             return ResponseEntity.ok(response);
         }
         
@@ -107,7 +107,7 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during deleting manufacturer: " + e.getMessage());
+            error.put("error", "Error during deleting picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }

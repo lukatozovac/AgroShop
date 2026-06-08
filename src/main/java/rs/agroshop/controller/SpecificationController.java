@@ -4,51 +4,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.agroshop.entity.Manufacturer;
-import rs.agroshop.service.ManufacturerService;
-import java.util.HashMap;
+import rs.agroshop.entity.Specification;
+import rs.agroshop.service.SpecificationService;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/manufacturers")
+@RequestMapping("/api/specifications")
 @CrossOrigin(origins = "*")
-public class ManufacturerController {
-    
+public class SpecificationController {
+
     @Autowired
-    private ManufacturerService manufacturerService;
+    private SpecificationService specificationService;
 
 // --------------------------------------------------------------------------------------- //    
-// ------------------------------ Get methods for read operations ------------------------ //
-    
+// --------------------------- Get methods for read operations --------------------------- //
+
     @GetMapping
-    public ResponseEntity<List<Manufacturer>> getAll() {
+    public ResponseEntity<List<Specification>> getAll() {
         try {
-            List<Manufacturer> manufacturers = manufacturerService.findAll();
-            return ResponseEntity.ok(manufacturers);
+            List<Specification> specifications = specificationService.findAll();
+            return ResponseEntity.ok(specifications);
         }
         
         catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Manufacturer> getById(@PathVariable Integer id) {
+    public ResponseEntity<Specification> getById(@PathVariable Integer id) {
         try {
-            Manufacturer manufacturer = manufacturerService.findById(id);
-            return ResponseEntity.ok(manufacturer);
+            Specification specification = specificationService.findById(id);
+            return ResponseEntity.ok(specification);
         }
-
+        
         catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+    }
+
+    @GetMapping("/machine/{machineId}")
+    public ResponseEntity<List<Specification>> getByMachineId(@PathVariable Integer machineId) {
+        try {
+            List<Specification> specifications = specificationService.findByMachineId(machineId);
+            return ResponseEntity.ok(specifications);
+        }
+        
+        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
 // --------------------------- Post methods for create operations ------------------------ //
 
     @PostMapping
-    public ResponseEntity<?> createManufacturer(@RequestBody Manufacturer manufacturer) {
+    public ResponseEntity<?> createSpecification(@RequestBody Specification specification) {
         try {
-            Manufacturer createdManufacturer = manufacturerService.createManufacturer(manufacturer);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdManufacturer);
+            Specification createdSpecification = specificationService.createSpecification(specification);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSpecification);
         }
         
         catch (RuntimeException e) {
@@ -59,19 +69,19 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during creating a new manufacturer: " + e.getMessage());
+            error.put("error", "Error during creating specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
 // --------------------------------------------------------------------------------------- //    
-// ---------------------------- Put methods for update operations ------------------------ //
+// --------------------------- Put methods for update operations ------------------------- //
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateManufacturer(@PathVariable Integer id, @RequestBody Manufacturer manufacturerDetails) {
+    public ResponseEntity<?> updateSpecification(@PathVariable Integer id, @RequestBody Specification specificationDetails) {
         try {
-            Manufacturer updatedManufacturer = manufacturerService.updateManufacturer(id, manufacturerDetails);
-            return ResponseEntity.ok(updatedManufacturer);
+            Specification updatedSpecification = specificationService.updateSpecification(id, specificationDetails);
+            return ResponseEntity.ok(updatedSpecification);
         }
         
         catch (RuntimeException e) {
@@ -82,20 +92,20 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during updating manufacturer: " + e.getMessage());
+            error.put("error", "Error during updating specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
 // --------------------------------------------------------------------------------------- //    
-// --------------------------------- Delete operations ----------------------------------- //
+// ------------------------------------ Delete operations -------------------------------- //
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteManufacturer(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteSpecification(@PathVariable Integer id) {
         try {
-            manufacturerService.deleteManufacturer(id);
+            specificationService.deleteSpecification(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Manufacturer with ID " + id + " is successfully deleted.");
+            response.put("message", "Specification with ID " + id + " has successfully deleted.");
             return ResponseEntity.ok(response);
         }
         
@@ -107,7 +117,7 @@ public class ManufacturerController {
         
         catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error during deleting manufacturer: " + e.getMessage());
+            error.put("error", "Error during deleting specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
