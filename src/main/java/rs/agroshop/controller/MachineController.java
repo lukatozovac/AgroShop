@@ -14,11 +14,10 @@ public class MachineController {
     @Autowired
     private MachineService machineService;
 
-    // 1. Vraća sve ili filtrirane mašine
         @GetMapping
         public List<Machine> getMachines(
         @RequestParam(required = false) String categoryName,
-        @RequestParam(required = false) String manufacturer) { // Dodaj novi parametar
+        @RequestParam(required = false) String manufacturer) {
     
         if (categoryName != null) {
         return machineService.findByCategoryName(categoryName);}
@@ -27,7 +26,6 @@ public class MachineController {
         return machineService.findAll();
         }
 
-    // 2. Vraća detalje jedne mašine
     @GetMapping("/{id}")
     public Machine getOne(@PathVariable Integer id) {
         return machineService.findById(id);
