@@ -95,7 +95,7 @@ public class ManufacturerController {
         try {
             manufacturerService.deleteManufacturer(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Manufacturer with ID " + id + " is successfully deleted.");
+            response.put("message", "Manufacturer with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         

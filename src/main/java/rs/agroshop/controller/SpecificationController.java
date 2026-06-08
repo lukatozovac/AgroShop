@@ -105,7 +105,7 @@ public class SpecificationController {
         try {
             specificationService.deleteSpecification(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Specification with ID " + id + " has successfully deleted.");
+            response.put("message", "Specification with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         

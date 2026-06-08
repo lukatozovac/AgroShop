@@ -106,7 +106,7 @@ public class CategoryController {
         try {
             categoryService.deleteCategory(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Category with ID " + id + " is successfully deleted.");
+            response.put("message", "Category with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
 

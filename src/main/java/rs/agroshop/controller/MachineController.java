@@ -130,7 +130,7 @@ public class MachineController {
         try {
             machineService.deleteMachine(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Machine with ID " + id + " is successfully deleted.");
+            response.put("message", "Machine with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         

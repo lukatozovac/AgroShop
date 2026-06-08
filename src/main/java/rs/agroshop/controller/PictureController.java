@@ -95,7 +95,7 @@ public class PictureController {
         try {
             pictureService.deletePicture(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Picture with ID " + id + " is successfully deleted.");
+            response.put("message", "Picture with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         
