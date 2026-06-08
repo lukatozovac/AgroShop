@@ -7,21 +7,25 @@ import rs.agroshop.service.MachineService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/machines")
+@RequestMapping("/api/machines")
 @CrossOrigin(origins = "*")
 public class MachineController {
 
     @Autowired
-    private MachineService machineService; // Preimenuj ovo iz categoryService u machineService zbog čitljivosti
+    private MachineService machineService;
 
     // 1. Vraća sve ili filtrirane mašine
-    @GetMapping
-    public List<Machine> getMachines(@RequestParam(required = false) String categoryName) {
+        @GetMapping
+        public List<Machine> getMachines(
+        @RequestParam(required = false) String categoryName,
+        @RequestParam(required = false) String manufacturer) { // Dodaj novi parametar
+    
         if (categoryName != null) {
-            return machineService.findByCategoryName(categoryName);
-        }
+        return machineService.findByCategoryName(categoryName);}
+        if (manufacturer != null) {
+        return machineService.findByManufacturerName(manufacturer);}
         return machineService.findAll();
-    }
+        }
 
     // 2. Vraća detalje jedne mašine
     @GetMapping("/{id}")
@@ -34,4 +38,9 @@ public class MachineController {
     public Machine getByName(@PathVariable String name) {
     return machineService.findMachineByName(name);
     }
+
+    @GetMapping("/search")
+    public List<Machine> search(@RequestParam String name) {
+    return machineService.findByNameContainingIgnoreCase(name);}
+
 }

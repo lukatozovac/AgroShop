@@ -1,9 +1,12 @@
+/* --- Card Styles --- */
+/* Card container with hover animation and layout settings */
 .card {
     height: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 12px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .card:hover {
@@ -11,6 +14,7 @@
     box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
 }
 
+/* Ensure images fit the card area */
 .card-img-top {
     height: 300px;
     object-fit: cover;
@@ -25,7 +29,7 @@
     flex-grow: 1;
 }
 
-/* Opcionalno: prilagođavanje za 4 kartice u redu */
+/* Grid layout for 4 items per row on large screens */
 @media (min-width: 992px) {
     .col-lg-3 {
         flex: 0 0 25%;
@@ -33,65 +37,41 @@
     }
 }
 
+/* --- Layout Structure --- */
+/* Ensure the page footer stays at the bottom */
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Zauzima bar celu visinu ekrana */
+    min-height: 100vh;
     margin: 0;
 }
 
 main {
-    flex: 1; /* Tera sadržaj da se rastegne i gurne footer dole */
+    flex: 1;
 }
 
-.slider-wrapper {
-    position: relative;
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.slide {
-    display: none;
-    width: 100%;
-    height: 350px; /* Visina prilagođena da prati specifikacije */
-    object-fit: cover;
-}
-
-.slide.active { display: block; }
-
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 12px;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    font-size: 18px;
-}
-.prev { left: 0; }
-.next { right: 0; }
-
+/* --- Lightbox Modal Styles --- */
+/* Fullscreen overlay for image preview */
 .lightbox {
-    display: none; /* Sakriveno po defaultu */
+    display: none; 
     position: fixed;
     z-index: 9999;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.9); /* Zamračena pozadina */
+    background-color: rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .lightbox-content {
     max-width: 80%;
     max-height: 80%;
     border: 2px solid white;
+    cursor: default;
 }
 
+/* Close button for lightbox */
 .close-btn {
     position: absolute;
     top: 20px; right: 40px;
@@ -99,7 +79,7 @@ main {
     cursor: pointer;
 }
 
-/* Strelice unutar lightbox-a */
+/* Navigation buttons inside lightbox */
 .lightbox-prev, .lightbox-next {
     position: absolute;
     top: 50%;
@@ -116,8 +96,16 @@ main {
 .lightbox-next { right: 20px; }
 .lightbox-prev:hover, .lightbox-next:hover { background: rgba(0,0,0,0.6); }
 
+/* --- Details Page Slider --- */
+/* Slider container with relative positioning for navigation arrows */
+.main-slider-container {
+    border: 3px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
 
-/* Definiši posebnu klasu SAMO za back dugme */
+/* Styling for the custom back button */
 .btn-back-circle {
     border: 2px solid #198754 !important;
     color: #198754 !important;

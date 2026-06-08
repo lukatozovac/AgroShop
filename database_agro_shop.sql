@@ -177,7 +177,7 @@ INSERT INTO `manufacturer` (`manufacturer_id`, `name`, `made_in`, `logo`) VALUES
 	(28, 'Kuhn', 'France', '/images/manufacturer/kuhn.jpg'),
 	(29, 'Kemper', 'Germany', '/images/manufacturer/kemper.jpg'),
 	(30, 'Kongskilde', 'Denmark', '/images/manufacturer/kongskilde.jpg'),
-	(31, 'Kvereland Group', 'Norway', '/images/manufacturer/kvereland_group.jpg'),
+	(31, 'Kverneland Group', 'Norway', '/images/manufacturer/kverneland_group.jpg'),
 	(32, 'Lemken', 'Germany', '/images/manufacturer/lemken.jpg'),
 	(33, 'Massey Ferguson', 'Canada', '/images/manufacturer/massey_ferguson.jpg'),
 	(34, 'Nardi', 'Italy', '/images/manufacturer/nardi.jpg'),

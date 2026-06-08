@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// --- 1. Učitavanje kategorija ---
+// --- 1. Fetch and display categories ---
 function loadCategories() {
     const vehicleContainer = document.getElementById('vehicle-container');
     const machineContainer = document.getElementById('machine-container');
@@ -30,28 +30,51 @@ function loadCategories() {
                 else if (cat.categoryType === 'Machine') machineContainer.innerHTML += cardHTML;
             });
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Failed to load categories!', error));
 }
 
-// --- 2. Učitavanje mašina ---
+// --- 2. Load machines with filtering (category, manufacturer, or search) ---
 function loadMachines() {
-    const params = new URLSearchParams(window.location.search);
-    const categoryName = params.get('categoryName');
-    const container = document.getElementById('machine-container');
-    if (!container) return;
+    const machineContainer = document.getElementById('machine-container');
+    if (!machineContainer) return;
 
-    fetch(`${API_BASE_URL}/machines?categoryName=${encodeURIComponent(categoryName)}`)
+    machineContainer.innerHTML = '<p class="text-center">Loading machines...</p>';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryName = urlParams.get('categoryName');
+    const manufacturer = urlParams.get('manufacturer');
+    const searchQuery = urlParams.get('search'); 
+    
+    let url = `${API_BASE_URL}/machines`;
+    
+    if (categoryName) { url += `?categoryName=${encodeURIComponent(categoryName)}`; }
+    else if (manufacturer) { url += `?manufacturer=${encodeURIComponent(manufacturer)}`; }
+    else if (searchQuery) { url += `/search?name=${encodeURIComponent(searchQuery)}`; }
+
+    fetch(url)
         .then(res => res.json())
         .then(data => {
-            container.innerHTML = '';
+            machineContainer.innerHTML = '';
+            const h3Element = document.querySelector('h3');
+            if (h3Element) {
+                if (manufacturer) h3Element.innerText = `Machines by ${manufacturer}`;
+                else if (categoryName) h3Element.innerText = `Machines in ${categoryName}`;
+                else if (searchQuery) h3Element.innerText = `Search results for: "${searchQuery}"`;
+            }
+
+            if (data.length === 0) {
+                machineContainer.innerHTML = '<p class="text-muted">No machines found.</p>';
+                return;
+            }
+
             data.forEach(m => {
-                container.innerHTML += `
+                machineContainer.innerHTML += `
                     <div class="col-md-3 mb-4">
-                        <div class="card mb-4">
-                            <img src="${m.iconPath}" class="card-img-top" alt="${m.name}">
+                        <div class="card h-100 shadow-sm border-0">
+                            <img src="${m.iconPath}" class="card-img-top" alt="${m.name}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5>${m.name}</h5>
-                                <p>${Number(m.price).toLocaleString('de-DE')} EUR</p>
+                                <h5 class="card-title fw-bold">${m.name}</h5>
+                                <p class="card-text text-muted">${m.releaseYear || ''} • ${Number(m.price).toLocaleString('de-DE')} EUR</p>
                                 <a href="details.html?machineName=${encodeURIComponent(m.name)}" class="btn btn-success">View Details</a>
                             </div>
                         </div>
@@ -59,16 +82,15 @@ function loadMachines() {
                 `;
             });
         })
-        .catch(err => console.error("Greška pri učitavanju mašina:", err));
+        .catch(err => {
+            console.error("Error:", err);
+            machineContainer.innerHTML = '<p class="text-danger">Failed to load machines!</p>';
+        });
 }
 
-// --- 3. Učitavanje detalja mašine ---
-// Globalne varijable na vrhu fajla
+// --- 3. Fetch machine details and initialize gallery ---
 let allPictures = [];
-let slideIndex = 0;
 let currentLightboxIndex = 0;
-
-// ... (loadCategories i loadMachines ostaju isti)
 
 function loadMachineDetails() {
     const params = new URLSearchParams(window.location.search);
@@ -80,10 +102,16 @@ function loadMachineDetails() {
     fetch(`${API_BASE_URL}/machines/name/${encodeURIComponent(name)}`)
         .then(res => res.json())
         .then(m => {
-            // OVO JE KLJUČNO: Popunjavamo globalni niz
-            allPictures = Array.isArray(m.pictures) ? m.pictures : [];
+            // Sort pictures by ID for consistent ordering
+            allPictures = Array.isArray(m.pictures) ? m.pictures.sort((a, b) => a.pictureId - b.pictureId) : [];
             const specs = Array.isArray(m.specifications) ? m.specifications : [];
             
+            // Pre-load images to cache for smooth slider performance
+            allPictures.forEach(p => { new Image().src = p.path; });
+            
+            currentLightboxIndex = 0;
+            const firstImg = allPictures.length > 0 ? allPictures[0].path : 'placeholder.jpg';
+
             container.innerHTML = `
                 <div class="row mb-5">
                     <div class="col-12">
@@ -92,19 +120,19 @@ function loadMachineDetails() {
                         <h3 class="text-dark fw-bold">Price: ${Number(m.price).toLocaleString('de-DE')} EUR</h3>
                     </div>
                 </div>
-
                 <div class="row mt-4">
                     <div class="col-lg-6">
                         <h3 class="mb-3">Photo Gallery</h3>
-                        <div class="slider-wrapper">
-                            ${allPictures.map((p, i) => `
-                                <img src="${p.path}" class="slide ${i === 0 ? 'active' : ''}" 
-                                     onclick="openLightbox('${p.path}')" style="cursor: pointer;">
-                            `).join('')}
-                            <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
-                            <button class="next" onclick="plusSlides(1)">&#10095;</button>
+                        <div class="main-slider-container" style="position: relative; border: 3px solid #eee; border-radius: 8px; overflow: hidden;">
+                            <img id="main-view" src="${firstImg}" class="img-fluid" 
+                                 style="width: 100%; height: 350px; object-fit: cover; cursor: pointer;"
+                                 onclick="openLightbox(allPictures[currentLightboxIndex].path)">
+                            
+                            <button class="btn btn-dark" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.7;" onclick="changeMainSlide(-1)">&#10094;</button>
+                            <button class="btn btn-dark" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); opacity: 0.7;" onclick="changeMainSlide(1)">&#10095;</button>
                         </div>
                     </div>
+                    
                     <div class="col-lg-6">
                         <h3 class="mb-3">Technical Specifications</h3>
                         <ul class="list-group list-group-flush border rounded">
@@ -119,45 +147,76 @@ function loadMachineDetails() {
                 </div>
             `;
         })
-        .catch(err => console.error("Greška:", err));
+        .catch(err => console.error("Failed to load machine details!", err));
 }
 
-// Logika za Lightbox
+// Change the main displayed slide in the gallery
+function changeMainSlide(n) {
+    if (allPictures.length === 0) return;
+    currentLightboxIndex = (currentLightboxIndex + n + allPictures.length) % allPictures.length;
+    const mainView = document.getElementById('main-view');
+    if (mainView) mainView.src = allPictures[currentLightboxIndex].path;
+}
+
+// --- 4. Load manufacturers ---
+function loadManufacturers() {
+    const container = document.getElementById('manufacturer-container');
+    if (!container) return;
+
+    fetch(`${API_BASE_URL}/manufacturers`)
+        .then(response => response.json())
+        .then(data => {
+            container.innerHTML = '';
+            data.forEach(m => {
+                container.innerHTML += `
+                    <div class="col-md-2 mb-5">
+                        <div class="card h-100 shadow-sm border-0">
+                            <img src="${m.logo}" class="card-img-top" alt="${m.name}" style="height: 200px; object-fit: contain; padding: 15px;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-dark fw-bold">${m.name}</h5>
+                                <p class="card-text small text-muted">${m.madeIn || ''}</p>
+                                <a href="machines.html?manufacturer=${encodeURIComponent(m.name)}" class="btn btn-success">View Machines</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        })
+        .catch(error => console.error('Error fetching manufacturers:', error));
+}
+
+// --- 5. Lightbox logic ---
 function openLightbox(imgSrc) {
     const lightbox = document.getElementById("myLightbox");
     const fullImg = document.getElementById("fullImg");
-    
-    // Pronađi indeks kliknute slike u globalnom nizu
     currentLightboxIndex = allPictures.findIndex(p => p.path === imgSrc);
-    
-    if (currentLightboxIndex !== -1) {
+    if (currentLightboxIndex === -1) currentLightboxIndex = 0;
+    if (lightbox && fullImg) {
         fullImg.src = allPictures[currentLightboxIndex].path;
         lightbox.style.display = "flex";
     }
 }
 
 function closeLightbox() {
-    document.getElementById("myLightbox").style.display = "none";
+    const lightbox = document.getElementById("myLightbox");
+    if (lightbox) lightbox.style.display = "none";
 }
 
 function changeLightboxSlide(n) {
     if (allPictures.length === 0) return;
+    const fullImg = document.getElementById("fullImg");
+    if (!fullImg) return;
     currentLightboxIndex = (currentLightboxIndex + n + allPictures.length) % allPictures.length;
-    document.getElementById("fullImg").src = allPictures[currentLightboxIndex].path;
+    fullImg.src = allPictures[currentLightboxIndex].path;
 }
 
-// Zatvaranje na klik van slike
-window.onclick = function(event) {
-    const lightbox = document.getElementById("myLightbox");
-    if (event.target == lightbox) closeLightbox();
+// --- 6. Search functionality ---
+function setupSearch() {
+    const searchForm = document.querySelector('form'); 
+    if (!searchForm) return;
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault(); 
+        const query = searchForm.querySelector('input').value;
+        if (query.trim()) window.location.href = `machines.html?search=${encodeURIComponent(query)}`;
+    });
 }
-
-// plusSlides funkcija (za mali slajder)
-function plusSlides(n) {
-    let slides = document.getElementsByClassName("slide");
-    if (slides.length === 0) return;
-    slides[slideIndex].classList.remove("active");
-    slideIndex = (slideIndex + n + slides.length) % slides.length;
-    slides[slideIndex].classList.add("active");
-}
-
