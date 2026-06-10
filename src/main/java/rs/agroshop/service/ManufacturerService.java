@@ -15,7 +15,8 @@ public class ManufacturerService {
 // ------------------------------- Read operations ------------------------------- //
 
     public List<Manufacturer> findAll(){return manufacturerRepository.findAll();}
-    public Manufacturer findById(Integer id){return manufacturerRepository.findById(id).orElseThrow(() -> new RuntimeException("Manufacturer with ID " + id + " doesn't exist."));}
+    public Manufacturer findById(Integer id){return manufacturerRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Manufacturer with ID " + id + " doesn't exist."));}
 
 // -------------------------------------------------------------------------------- //                
 // ---------------------------- Create operations --------------------------------- //

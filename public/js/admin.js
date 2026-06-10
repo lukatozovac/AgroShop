@@ -1,12 +1,9 @@
 // Base URL for the backend REST API
 const API_BASE = 'http://localhost:8080/api';
 
-// Wait for the HTML document to fully load before executing scripts
 document.addEventListener("DOMContentLoaded", () => {
-    // Get the current page URL path
     const path = window.location.pathname;
     
-    // Determine which page is currently active and load the corresponding data
     if (path.includes("admin_categories.html")) loadCategories();
     else if (path.includes("admin_machines.html")) loadMachines();
     else if (path.includes("admin_manufacturers.html")) loadManufacturers();
@@ -16,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // -------------------------------------------------------------------------------------------------- //
                                     //  LOAD FUNCTIONS   //
-
+/** Load categories **/
 async function loadCategories(){
     try{
         const res = await fetch(`${API_BASE}/categories`);
@@ -40,7 +37,7 @@ async function loadCategories(){
     catch(err){console.error("Error fetching categories:", err);}
 }
 
-/** Fetch machines **/
+/** Load all machines **/
 async function loadMachines(){
     try{
         const res = await fetch(`${API_BASE}/machines`);
@@ -68,7 +65,7 @@ async function loadMachines(){
     }
 }
 
-/** Fetchs manufacturers **/
+/** Load manufacturers **/
 async function loadManufacturers(){
     try{
         const res = await fetch(`${API_BASE}/manufacturers`);
@@ -95,7 +92,7 @@ async function loadManufacturers(){
     catch(err){console.error("Error:", err);}
 }
 
-/** Fetchs pictures **/
+/** Load pictures **/
 async function loadPictures(){
     try{
         const res = await fetch(`${API_BASE}/machines`);
@@ -128,7 +125,7 @@ async function loadPictures(){
     catch(err){console.error("Error fetching pictures:", err);}
 }
 
-/** Fetches specifications **/
+/** Load specifications **/
 async function loadSpecifications(){
     try {
         const res = await fetch(`${API_BASE}/machines`);
@@ -165,7 +162,7 @@ async function loadSpecifications(){
 // ----------------------------------------------------------------------------------------------------------------------- //
                                             // ADD FUNCTIONS //
 
-/** SweetAlert modal to add a new Category. **/
+/** Modal to add a new Category. **/
 async function openAddCategoryModal(){
     const { value: formValues } = await Swal.fire({
         title: 'Add New Category',
@@ -209,7 +206,7 @@ async function openAddCategoryModal(){
     }
 }
 
-/** SweetAlert modal to add a new Machine. Fetches available categories and manufacturers to populate the dropdown selects. **/
+/** Modal to add a new Machine. **/
 async function openAddMachineModal(){
 
     const [categories, manufacturers] = await Promise.all([
@@ -272,7 +269,6 @@ async function openAddMachineModal(){
                 console.error("Backend Error:", err);
                 Swal.fire('Error', 'Failed to add machine.', 'error');
             }
-
         }
         
         catch(e){Swal.fire('Error', 'Unable to connect to the server', 'error');}
@@ -280,7 +276,7 @@ async function openAddMachineModal(){
 }
 
 
-/** Opens a modal to add a new Manufacturer. **/
+/** Modal to add a new Manufacturer. **/
 async function openAddManufacturerModal() {
     const{ value: formValues } = await Swal.fire({
         title: 'Add New Manufacturer',
@@ -297,20 +293,32 @@ async function openAddManufacturerModal() {
     });
 
     if(formValues){
-        const res = await fetch(`${API_BASE}/manufacturers`, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify(formValues) 
-        });
-
-        if(res.ok){ 
-            Swal.fire('Success', 'Manufacturer added!', 'success'); 
-            loadManufacturers(); 
+        try{
+            // Send POST request to create the new manufacturer
+            const res = await fetch(`${API_BASE}/manufacturers`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(formValues) 
+            });
+            
+            if(res.ok){ 
+                Swal.fire('Success', 'Manufacturer added successfully!', 'success'); 
+                loadManufacturers(); // Refresh the manufacturer table
+            }
+            
+            else{
+                const err = await res.text();
+                console.error("Backend Error:", err);
+                Swal.fire('Error', 'Failed to add manufacturer.', 'error');
+            }
         }
+        
+        catch(e){Swal.fire('Error', 'Unable to connect to the server', 'error');}
     }
+
 }
 
-/** Opens a modal to add a new Picture, associating it with an existing Machine. **/
+/** Modal to add a new Picture. **/
 async function openAddPictureModal() {
 
     const machines = await fetch(`${API_BASE}/machines`).then(r => r.json());   
@@ -335,21 +343,33 @@ async function openAddPictureModal() {
         }
     });
 
-    if(formValues){
-        const res = await fetch(`${API_BASE}/pictures`, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify(formValues) 
-        });
-
-        if(res.ok){ 
-            Swal.fire('Success', 'Picture added!', 'success'); 
-            loadPictures(); 
+   if(formValues){
+        try{
+            // Send POST request to create the new picture
+            const res = await fetch(`${API_BASE}/pictures`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(formValues) 
+            });
+            
+            if(res.ok){ 
+                Swal.fire('Success', 'Picture added successfully!', 'success'); 
+                loadPictures(); // Refresh the picture table
+            }
+            
+            else{
+                const err = await res.text();
+                console.error("Backend Error:", err);
+                Swal.fire('Error', 'Failed to add picture.', 'error');
+            }
         }
+        
+        catch(e){Swal.fire('Error', 'Unable to connect to the server', 'error');}
     }
+
 }
 
-/** Opens a modal to add a new Specification, associating it with an existing Machine. **/
+/** Modal to add a new Specification. **/
 async function openAddSpecModal(){
     const machines = await fetch(`${API_BASE}/machines`).then(r => r.json());
     const { value: formValues } = await Swal.fire({
@@ -370,18 +390,30 @@ async function openAddSpecModal(){
         }
     });
 
-    if (formValues){
-        const res = await fetch(`${API_BASE}/specifications`, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify(formValues) 
-        });
+       if(formValues){
+        try{
+            // Send POST request to create the new specification
+            const res = await fetch(`${API_BASE}/specifications`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(formValues) 
+            });
+            
+            if(res.ok){ 
+                Swal.fire('Success', 'Manufacturer added successfully!', 'success'); 
+                loadSpecifications(); // Refresh the specification table
+            }
+            
+            else{
+                const err = await res.text();
+                console.error("Backend Error:", err);
+                Swal.fire('Error', 'Failed to add specification.', 'error');
+            }
 
-        if (res.ok) { 
-            Swal.fire('Success', 'Specification added!', 'success'); 
-            loadSpecifications(); 
         }
+        catch(e){Swal.fire('Error', 'Unable to connect to the server', 'error');}
     }
+
 }
 
 // ------------------------------------------------------------------------------------------------------------------------ //
