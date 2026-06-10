@@ -20,14 +20,17 @@ function loadCategories() {
                 // Construct the HTML card for each category
                 const cardHTML = `
                     <div class="col-md-3 mb-4">
-                        <div class="card h-100 shadow-sm border-0">
+                        <a href="machines.html?categoryName=${encodeURIComponent(cat.categoryName)}" 
+                        class="card h-100 shadow-sm border-0 text-decoration-none text-dark">
                             <img src="${cat.picture}" class="card-img-top" alt="${cat.categoryName}">
                             <div class="card-body">
                                 <h5 class="card-title text-dark fw-bold">${cat.categoryName}</h5>
                                 <p class="card-text small text-muted">${cat.description}</p>
-                                <a href="machines.html?categoryName=${encodeURIComponent(cat.categoryName)}" class="btn btn-success">View Machines</a>
+                                <div class="btn btn-success" onclick="event.preventDefault(); window.location.href='machines.html?categoryName=${encodeURIComponent(cat.categoryName)}'">
+                                    View Machines
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 `;
                 
@@ -46,60 +49,49 @@ function loadMachines() {
     if (!machineContainer) return;
 
     machineContainer.innerHTML = '<p class="text-center">Loading machines...</p>';
-
+    
     const urlParams = new URLSearchParams(window.location.search);
     const categoryName = urlParams.get('categoryName');
     const manufacturer = urlParams.get('manufacturer');
     const searchQuery = urlParams.get('search'); 
     
-    // Base URL for fetching all machines
     let url = `${API_BASE_URL}/machines`;
-    
-    if(categoryName){ url += `?categoryName=${encodeURIComponent(categoryName)}`;}
-    else if(manufacturer){ url += `?manufacturer=${encodeURIComponent(manufacturer)}`;}
-    else if(searchQuery){ url += `/search?name=${encodeURIComponent(searchQuery)}`;}
+    if(categoryName) url += `?categoryName=${encodeURIComponent(categoryName)}`;
+    else if(manufacturer) url += `?manufacturer=${encodeURIComponent(manufacturer)}`;
+    else if(searchQuery) url += `/search?name=${encodeURIComponent(searchQuery)}`;
 
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            machineContainer.innerHTML = '';
-            
-            const h3Element = document.querySelector('h3');
-            if(h3Element){
-                if (manufacturer) h3Element.innerText = `Machines by ${manufacturer}`;
-                else if (categoryName) h3Element.innerText = `Machines in ${categoryName}`;
-                else if (searchQuery) h3Element.innerText = `Search results for: "${searchQuery}"`;
-            }
-
             if(data.length === 0){
-                machineContainer.innerHTML = '<p class="text-muted">No machines found.</p>';
+                machineContainer.innerHTML = '<p class="text-muted text-center">No machines found.</p>';
                 return;
             }
-
-            // Map and render the machine cards
-            data.forEach(m => {
-                machineContainer.innerHTML += `
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100 shadow-sm border-0">
-                            <img src="${m.iconPath}" class="card-img-top" alt="${m.name}" style="height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">${m.name}</h5>
-                                <p class="card-text text-muted">${m.releaseYear || ''} • ${Number(m.price).toLocaleString('de-DE')} EUR</p>
-                                <a href="details.html?machineName=${encodeURIComponent(m.name)}" class="btn btn-success">View Details</a>
+            // Construct the HTML card for each machine
+            machineContainer.innerHTML = data.map(m => `
+                <div class="col-md-3 mb-4">
+                    <a href="details.html?machineName=${encodeURIComponent(m.name)}" 
+                    class="card h-100 shadow-sm border-0 text-decoration-none text-dark">
+                        <img src="${m.iconPath}" class="card-img-top" alt="${m.name}">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">${m.name}</h5>
+                            <p class="card-text text-muted">${m.releaseYear || ''} • ${Number(m.price).toLocaleString('de-DE')} EUR</p>
+                            <div class="btn btn-success" onclick="event.preventDefault(); window.location.href='details.html?machineName=${encodeURIComponent(m.name)}'">
+                                View Details
                             </div>
                         </div>
-                    </div>
-                `;
-            });
+                    </a>
+                </div>
+            `).join('');
         })
         .catch(err => {
             console.error("Error:", err);
-            machineContainer.innerHTML = '<p class="text-danger">Failed to load machines!</p>';
+            machineContainer.innerHTML = '<p class="text-danger text-center">Failed to load machines!</p>';
         });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------- //
-                                                // 3. Load Machine details, pictures and specifications // 
+                                    // 3. Load Machine details, pictures and specifications // 
 
 // Global variables to track state for the image sliders
 let allPictures = [];
@@ -190,12 +182,15 @@ function loadManufacturers() {
             data.forEach(m => {
                 container.innerHTML += `
                     <div class="col-md-2 mb-5">
-                        <div class="card h-100 shadow-sm border-0">
+                        <div class="card h-100 shadow-sm border-0" 
+                             onclick="window.location.href='machines.html?manufacturer=${encodeURIComponent(m.name)}'">
                             <img src="${m.logo}" class="card-img-top" alt="${m.name}" style="height: 200px; object-fit: contain; padding: 15px;">
                             <div class="card-body text-center">
                                 <h5 class="card-title text-dark fw-bold">${m.name}</h5>
                                 <p class="card-text small text-muted">${m.madeIn || ''}</p>
-                                <a href="machines.html?manufacturer=${encodeURIComponent(m.name)}" class="btn btn-success">View Machines</a>
+                                <a href="machines.html?manufacturer=${encodeURIComponent(m.name)}" 
+                                   class="btn btn-success" 
+                                   onclick="event.stopPropagation()">View Machines</a>
                             </div>
                         </div>
                     </div>
