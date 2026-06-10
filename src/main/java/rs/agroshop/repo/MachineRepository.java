@@ -13,9 +13,7 @@ public interface MachineRepository extends JpaRepository<Machine, Integer>{
     
     List<Machine> findByCategory_CategoryId(Integer categoryId);
     List<Machine> findByCategory_CategoryName(String categoryName);
-
     List<Machine> findByManufacturer_Name(String manufacturerName);
-
     List<Machine> findByNameContainingIgnoreCase(String name);
 
     @Query("SELECT m FROM Machine m LEFT JOIN FETCH m.specifications LEFT JOIN FETCH m.pictures WHERE m.name = :name")

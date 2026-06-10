@@ -28,7 +28,6 @@ public class MachineController {
     {
         try{
             List<Machine> machines;
-            
             if (categoryName != null) {machines = machineService.findByCategoryName(categoryName);}
             else if (manufacturer != null) {machines = machineService.findByManufacturerName(manufacturer);}
             else {machines = machineService.findAll();}
@@ -47,7 +46,7 @@ public class MachineController {
         }
 
         catch(RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);}
-
+        
         catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 

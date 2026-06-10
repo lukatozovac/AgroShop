@@ -46,10 +46,10 @@ public class Machine {
     private Manufacturer manufacturer;
 
     @OneToMany(mappedBy = "machine", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("machine") // Sprečava beskonačnu petlju
+    @JsonIgnoreProperties("machine")
     private Set<Specification> specifications = new HashSet<>();
 
     @OneToMany(mappedBy = "machine", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("machine") // Sprečava beskonačnu petlju
+    @JsonIgnoreProperties("machine")
     private Set<Picture> pictures = new HashSet<>();
 }
