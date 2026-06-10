@@ -2,17 +2,11 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
 // ----------------------------------------------------------------------------------------------------------------------------- //
-                                        // 1. CATEGORY MANAGEMENT //
+                                        // 1. Load Categories //
 
-/**
-Fetches all categories from the API and displays them in their respective containers.
-Differentiates between 'Vehicle' and 'Machine' types to render them separately. 
-**/
 function loadCategories() {
     const vehicleContainer = document.getElementById('vehicle-container');
     const machineContainer = document.getElementById('machine-container');
-    
-    // Ensure both containers exist on the page before proceeding
     if (!vehicleContainer || !machineContainer) return;
 
     fetch(`${API_BASE_URL}/categories`)
@@ -37,7 +31,6 @@ function loadCategories() {
                     </div>
                 `;
                 
-                // Append the generated card to the appropriate container based on category type
                 if (cat.categoryType === 'Vehicle') vehicleContainer.innerHTML += cardHTML;
                 else if (cat.categoryType === 'Machine') machineContainer.innerHTML += cardHTML;
             });
@@ -46,17 +39,14 @@ function loadCategories() {
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------- //
-                                        // 2. MACHINE LISTING & FILTERING //
+                                             // 2. Load Machines //
 
-/** Fetches machines from the API. Handles dynamic URL generation for filtering based on category, manufacturer, or a user search query. **/
 function loadMachines() {
     const machineContainer = document.getElementById('machine-container');
     if (!machineContainer) return;
 
-    // Show loading state
     machineContainer.innerHTML = '<p class="text-center">Loading machines...</p>';
 
-    // Parse URL parameters to determine if active filters exist
     const urlParams = new URLSearchParams(window.location.search);
     const categoryName = urlParams.get('categoryName');
     const manufacturer = urlParams.get('manufacturer');
@@ -65,26 +55,23 @@ function loadMachines() {
     // Base URL for fetching all machines
     let url = `${API_BASE_URL}/machines`;
     
-    // Append the appropriate query parameters based on active filters
-    if (categoryName) { url += `?categoryName=${encodeURIComponent(categoryName)}`; }
-    else if (manufacturer) { url += `?manufacturer=${encodeURIComponent(manufacturer)}`; }
-    else if (searchQuery) { url += `/search?name=${encodeURIComponent(searchQuery)}`; }
+    if(categoryName){ url += `?categoryName=${encodeURIComponent(categoryName)}`;}
+    else if(manufacturer){ url += `?manufacturer=${encodeURIComponent(manufacturer)}`;}
+    else if(searchQuery){ url += `/search?name=${encodeURIComponent(searchQuery)}`;}
 
     fetch(url)
         .then(res => res.json())
         .then(data => {
             machineContainer.innerHTML = '';
             
-            // Dynamically update the page heading based on the active filter
             const h3Element = document.querySelector('h3');
-            if (h3Element) {
+            if(h3Element){
                 if (manufacturer) h3Element.innerText = `Machines by ${manufacturer}`;
                 else if (categoryName) h3Element.innerText = `Machines in ${categoryName}`;
                 else if (searchQuery) h3Element.innerText = `Search results for: "${searchQuery}"`;
             }
 
-            // Handle empty result sets gracefully
-            if (data.length === 0) {
+            if(data.length === 0){
                 machineContainer.innerHTML = '<p class="text-muted">No machines found.</p>';
                 return;
             }
@@ -112,13 +99,12 @@ function loadMachines() {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------- //
-                                                // 3. MACHINE DETAILS & INLINE GALLERY // 
+                                                // 3. Load Machine details, pictures and specifications // 
 
 // Global variables to track state for the image sliders
 let allPictures = [];
 let currentLightboxIndex = 0;
 
-/** Fetches the specific details of a single machine (including specs and images) and renders the detailed view structure. **/
 function loadMachineDetails() {
     const params = new URLSearchParams(window.location.search);
     const name = params.get('machineName'); 
@@ -134,11 +120,9 @@ function loadMachineDetails() {
             allPictures = Array.isArray(m.pictures) ? m.pictures.sort((a, b) => a.pictureId - b.pictureId) : [];
             const specs = Array.isArray(m.specifications) ? m.specifications : [];
             
-            // Pre-load images into the browser cache for seamless sliding transitions
             allPictures.forEach(p => { new Image().src = p.path; }); 
             currentLightboxIndex = 0;
 
-            // Set a fallback placeholder if no images exist
             const firstImg = allPictures.length > 0 ? allPictures[0].path : 'placeholder.jpg';
 
             // Construct the main details UI
@@ -193,10 +177,7 @@ function changeMainSlide(n) {
 }
 
 // ------------------------------------------------------------------------------------------------------------ //
-                                    //  4. MANUFACTURERS LISTING   //
-
-
-/** Fetches all manufacturers from the API and renders them as cards. **/
+                                    //  4. Load Manufacturers   //
 
 function loadManufacturers() {
     const container = document.getElementById('manufacturer-container');
@@ -225,11 +206,10 @@ function loadManufacturers() {
 }
 
 // ----------------------------------------------------------------------------------------------------------- //
-                        // 5. LIGHTBOX MODAL CONTROLS (Full-screen image viewing) //
+                                    // 5. LIGHTBOX MODAL CONTROLS //
 
 
 /**  Opens the fullscreen lightbox modal to view the selected image. **/
-
 function openLightbox(imgSrc) {
     const lightbox = document.getElementById("myLightbox");
     const fullImg = document.getElementById("fullImg");
