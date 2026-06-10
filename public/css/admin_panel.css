@@ -1,0 +1,21 @@
+/* Ensure the page takes the full height of the viewport */
+html, body {
+    height: 100%;
+}
+
+/* Use flexbox on body to push the footer to the bottom */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom scrollbar style for responsive tables */
+.table-responsive {
+    scrollbar-width: thin;
+}
+
+/* Optional: Forces table content to stay on one line. Use with caution as it can break layout on small screens. */
+.table td {
+    white-space: nowrap;
+    vertical-align: middle;
+}

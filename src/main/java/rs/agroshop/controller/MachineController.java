@@ -26,7 +26,7 @@ public class MachineController {
     @RequestParam(required = false) String categoryName,
     @RequestParam(required = false) String manufacturer)
     {
-        try {
+        try{
             List<Machine> machines;
             
             if (categoryName != null) {machines = machineService.findByCategoryName(categoryName);}
@@ -35,7 +35,7 @@ public class MachineController {
             return ResponseEntity.ok(machines);
         }
 
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
 
@@ -46,9 +46,9 @@ public class MachineController {
             return ResponseEntity.ok(machine);
         }
 
-        catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);}
+        catch(RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);}
 
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
 
@@ -59,7 +59,7 @@ public class MachineController {
             return ResponseEntity.ok(machine);
         }
 
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -73,7 +73,7 @@ public class MachineController {
             return ResponseEntity.ok(machines);
         }
 
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
@@ -81,18 +81,18 @@ public class MachineController {
 
     @PostMapping
     public ResponseEntity<?> createMachine(@RequestBody Machine machine) {
-        try {
+        try{
             Machine createdMachine = machineService.createMachine(machine);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdMachine);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during creating a new machine: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -104,18 +104,18 @@ public class MachineController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMachine(@PathVariable Integer id, @RequestBody Machine machineDetails) {
-        try {
+        try{
             Machine updatedMachine = machineService.updateMachine(id, machineDetails);
             return ResponseEntity.ok(updatedMachine);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during updating machine: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -127,20 +127,20 @@ public class MachineController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMachine(@PathVariable Integer id) {
-        try {
+        try{
             machineService.deleteMachine(id);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Machine with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during deleting machine: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

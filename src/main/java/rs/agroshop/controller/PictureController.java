@@ -23,12 +23,12 @@ public class PictureController {
 
     @GetMapping
     public ResponseEntity<List<Picture>> getAll() {
-        try {
+        try{
             List<Picture> pictures = pictureService.findAll();
             return ResponseEntity.ok(pictures);
         }
         
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
@@ -38,7 +38,7 @@ public class PictureController {
             return ResponseEntity.ok(picture);
         }
         
-        catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        catch(RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
@@ -51,13 +51,13 @@ public class PictureController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPicture);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during adding a new picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -69,18 +69,18 @@ public class PictureController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePicture(@PathVariable Integer id, @RequestBody Picture pictureDetails) {
-        try {
+        try{
             Picture updatedPicture = pictureService.updatePicture(id, pictureDetails);
             return ResponseEntity.ok(updatedPicture);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during updating picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -92,20 +92,20 @@ public class PictureController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePicture(@PathVariable Integer id) {
-        try {
+        try{
             pictureService.deletePicture(id);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Picture with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during deleting picture: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

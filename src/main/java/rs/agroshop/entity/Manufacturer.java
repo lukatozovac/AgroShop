@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Setter
 @NoArgsConstructor
 public class Manufacturer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manufacturer_id")
@@ -24,6 +25,6 @@ public class Manufacturer {
 
     @Column(nullable = false, length = 255)
     private String logo;
-
+    
 }
     

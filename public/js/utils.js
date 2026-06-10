@@ -1,19 +1,29 @@
+// Base URL for the backend REST API
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// --- 1. Fetch and display categories ---
+// ----------------------------------------------------------------------------------------------------------------------------- //
+                                        // 1. CATEGORY MANAGEMENT //
+
+/**
+Fetches all categories from the API and displays them in their respective containers.
+Differentiates between 'Vehicle' and 'Machine' types to render them separately. 
+**/
 function loadCategories() {
     const vehicleContainer = document.getElementById('vehicle-container');
     const machineContainer = document.getElementById('machine-container');
     
+    // Ensure both containers exist on the page before proceeding
     if (!vehicleContainer || !machineContainer) return;
 
     fetch(`${API_BASE_URL}/categories`)
         .then(response => response.json())
         .then(data => {
+            // Clear existing content to prevent duplication
             vehicleContainer.innerHTML = '';
             machineContainer.innerHTML = '';
 
             data.forEach(cat => {
+                // Construct the HTML card for each category
                 const cardHTML = `
                     <div class="col-md-3 mb-4">
                         <div class="card h-100 shadow-sm border-0">
@@ -26,6 +36,8 @@ function loadCategories() {
                         </div>
                     </div>
                 `;
+                
+                // Append the generated card to the appropriate container based on category type
                 if (cat.categoryType === 'Vehicle') vehicleContainer.innerHTML += cardHTML;
                 else if (cat.categoryType === 'Machine') machineContainer.innerHTML += cardHTML;
             });
@@ -33,20 +45,27 @@ function loadCategories() {
         .catch(error => console.error('Failed to load categories!', error));
 }
 
-// --- 2. Load machines with filtering (category, manufacturer, or search) ---
+// ----------------------------------------------------------------------------------------------------------------------------------------- //
+                                        // 2. MACHINE LISTING & FILTERING //
+
+/** Fetches machines from the API. Handles dynamic URL generation for filtering based on category, manufacturer, or a user search query. **/
 function loadMachines() {
     const machineContainer = document.getElementById('machine-container');
     if (!machineContainer) return;
 
+    // Show loading state
     machineContainer.innerHTML = '<p class="text-center">Loading machines...</p>';
 
+    // Parse URL parameters to determine if active filters exist
     const urlParams = new URLSearchParams(window.location.search);
     const categoryName = urlParams.get('categoryName');
     const manufacturer = urlParams.get('manufacturer');
     const searchQuery = urlParams.get('search'); 
     
+    // Base URL for fetching all machines
     let url = `${API_BASE_URL}/machines`;
     
+    // Append the appropriate query parameters based on active filters
     if (categoryName) { url += `?categoryName=${encodeURIComponent(categoryName)}`; }
     else if (manufacturer) { url += `?manufacturer=${encodeURIComponent(manufacturer)}`; }
     else if (searchQuery) { url += `/search?name=${encodeURIComponent(searchQuery)}`; }
@@ -55,6 +74,8 @@ function loadMachines() {
         .then(res => res.json())
         .then(data => {
             machineContainer.innerHTML = '';
+            
+            // Dynamically update the page heading based on the active filter
             const h3Element = document.querySelector('h3');
             if (h3Element) {
                 if (manufacturer) h3Element.innerText = `Machines by ${manufacturer}`;
@@ -62,11 +83,13 @@ function loadMachines() {
                 else if (searchQuery) h3Element.innerText = `Search results for: "${searchQuery}"`;
             }
 
+            // Handle empty result sets gracefully
             if (data.length === 0) {
                 machineContainer.innerHTML = '<p class="text-muted">No machines found.</p>';
                 return;
             }
 
+            // Map and render the machine cards
             data.forEach(m => {
                 machineContainer.innerHTML += `
                     <div class="col-md-3 mb-4">
@@ -88,10 +111,14 @@ function loadMachines() {
         });
 }
 
-// --- 3. Fetch machine details and initialize gallery ---
+// ---------------------------------------------------------------------------------------------------------------------------- //
+                                                // 3. MACHINE DETAILS & INLINE GALLERY // 
+
+// Global variables to track state for the image sliders
 let allPictures = [];
 let currentLightboxIndex = 0;
 
+/** Fetches the specific details of a single machine (including specs and images) and renders the detailed view structure. **/
 function loadMachineDetails() {
     const params = new URLSearchParams(window.location.search);
     const name = params.get('machineName'); 
@@ -99,19 +126,22 @@ function loadMachineDetails() {
     
     if (!container) return;
     
+    // Fetch machine by name instead of ID
     fetch(`${API_BASE_URL}/machines/name/${encodeURIComponent(name)}`)
         .then(res => res.json())
         .then(m => {
-            // Sort pictures by ID for consistent ordering
+            // Extract and sort pictures by ID to ensure consistent display order
             allPictures = Array.isArray(m.pictures) ? m.pictures.sort((a, b) => a.pictureId - b.pictureId) : [];
             const specs = Array.isArray(m.specifications) ? m.specifications : [];
             
-            // Pre-load images to cache for smooth slider performance
-            allPictures.forEach(p => { new Image().src = p.path; });
-            
+            // Pre-load images into the browser cache for seamless sliding transitions
+            allPictures.forEach(p => { new Image().src = p.path; }); 
             currentLightboxIndex = 0;
+
+            // Set a fallback placeholder if no images exist
             const firstImg = allPictures.length > 0 ? allPictures[0].path : 'placeholder.jpg';
 
+            // Construct the main details UI
             container.innerHTML = `
                 <div class="row mb-5">
                     <div class="col-12">
@@ -120,6 +150,7 @@ function loadMachineDetails() {
                         <h3 class="text-dark fw-bold">Price: ${Number(m.price).toLocaleString('de-DE')} EUR</h3>
                     </div>
                 </div>
+                
                 <div class="row mt-4">
                     <div class="col-lg-6">
                         <h3 class="mb-3">Photo Gallery</h3>
@@ -150,15 +181,23 @@ function loadMachineDetails() {
         .catch(err => console.error("Failed to load machine details!", err));
 }
 
-// Change the main displayed slide in the gallery
+/** Changes the displayed image in the inline gallery. **/
+
 function changeMainSlide(n) {
     if (allPictures.length === 0) return;
+    // Calculate new index with wraparound capability using modulo operator
     currentLightboxIndex = (currentLightboxIndex + n + allPictures.length) % allPictures.length;
+    
     const mainView = document.getElementById('main-view');
     if (mainView) mainView.src = allPictures[currentLightboxIndex].path;
 }
 
-// --- 4. Load manufacturers ---
+// ------------------------------------------------------------------------------------------------------------ //
+                                    //  4. MANUFACTURERS LISTING   //
+
+
+/** Fetches all manufacturers from the API and renders them as cards. **/
+
 function loadManufacturers() {
     const container = document.getElementById('manufacturer-container');
     if (!container) return;
@@ -185,38 +224,56 @@ function loadManufacturers() {
         .catch(error => console.error('Error fetching manufacturers:', error));
 }
 
-// --- 5. Lightbox logic ---
+// ----------------------------------------------------------------------------------------------------------- //
+                        // 5. LIGHTBOX MODAL CONTROLS (Full-screen image viewing) //
+
+
+/**  Opens the fullscreen lightbox modal to view the selected image. **/
+
 function openLightbox(imgSrc) {
     const lightbox = document.getElementById("myLightbox");
     const fullImg = document.getElementById("fullImg");
+    
+    // Find the current array index based on the clicked image's source path
     currentLightboxIndex = allPictures.findIndex(p => p.path === imgSrc);
-    if (currentLightboxIndex === -1) currentLightboxIndex = 0;
+    if (currentLightboxIndex === -1) currentLightboxIndex = 0; // Fallback safeguard
+    
     if (lightbox && fullImg) {
         fullImg.src = allPictures[currentLightboxIndex].path;
-        lightbox.style.display = "flex";
+        lightbox.style.display = "flex"; // Make the overlay visible
     }
 }
 
+/** Closes the lightbox modal. **/
 function closeLightbox() {
     const lightbox = document.getElementById("myLightbox");
     if (lightbox) lightbox.style.display = "none";
 }
 
+/** Changes the displayed image while inside the fullscreen lightbox view. **/
 function changeLightboxSlide(n) {
     if (allPictures.length === 0) return;
     const fullImg = document.getElementById("fullImg");
     if (!fullImg) return;
+    
+    // Calculate new index with wraparound
     currentLightboxIndex = (currentLightboxIndex + n + allPictures.length) % allPictures.length;
     fullImg.src = allPictures[currentLightboxIndex].path;
 }
 
-// --- 6. Search functionality ---
+// ---------------------------------------------------------------------------------------------------------- //
+                                         // 6. SEARCH FUNCTIONALITY //
+
 function setupSearch() {
     const searchForm = document.querySelector('form'); 
     if (!searchForm) return;
+    
     searchForm.addEventListener('submit', function(e) {
-        e.preventDefault(); 
+        e.preventDefault(); // Stop standard HTML form POST behavior
         const query = searchForm.querySelector('input').value;
+        
+        // If the query isn't empty, redirect to trigger the loadMachines() search logic
         if (query.trim()) window.location.href = `machines.html?search=${encodeURIComponent(query)}`;
     });
 }
+// ---------------------------------------------------------------------------------------------------------- //

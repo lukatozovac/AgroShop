@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import rs.agroshop.entity.Machine;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,5 @@ public interface MachineRepository extends JpaRepository<Machine, Integer>{
 
     @Query("SELECT m FROM Machine m LEFT JOIN FETCH m.specifications LEFT JOIN FETCH m.pictures WHERE m.name = :name")
     Optional<Machine> findByName(@Param("name") String name);
-
-
 
 }

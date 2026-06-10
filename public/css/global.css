@@ -1,5 +1,4 @@
 /* --- Card Styles --- */
-/* Card container with hover animation and layout settings */
 .card {
     height: 100%;
     display: flex;
@@ -14,7 +13,6 @@
     box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
 }
 
-/* Ensure images fit the card area */
 .card-img-top {
     height: 300px;
     object-fit: cover;
@@ -29,16 +27,7 @@
     flex-grow: 1;
 }
 
-/* Grid layout for 4 items per row on large screens */
-@media (min-width: 992px) {
-    .col-lg-3 {
-        flex: 0 0 25%;
-        max-width: 25%;
-    }
-}
-
 /* --- Layout Structure --- */
-/* Ensure the page footer stays at the bottom */
 body {
     display: flex;
     flex-direction: column;
@@ -51,7 +40,6 @@ main {
 }
 
 /* --- Lightbox Modal Styles --- */
-/* Fullscreen overlay for image preview */
 .lightbox {
     display: none; 
     position: fixed;
@@ -71,7 +59,6 @@ main {
     cursor: default;
 }
 
-/* Close button for lightbox */
 .close-btn {
     position: absolute;
     top: 20px; right: 40px;
@@ -79,7 +66,6 @@ main {
     cursor: pointer;
 }
 
-/* Navigation buttons inside lightbox */
 .lightbox-prev, .lightbox-next {
     position: absolute;
     top: 50%;
@@ -97,7 +83,6 @@ main {
 .lightbox-prev:hover, .lightbox-next:hover { background: rgba(0,0,0,0.6); }
 
 /* --- Details Page Slider --- */
-/* Slider container with relative positioning for navigation arrows */
 .main-slider-container {
     border: 3px solid #eee;
     border-radius: 8px;
@@ -105,7 +90,6 @@ main {
     position: relative;
 }
 
-/* Styling for the custom back button */
 .btn-back-circle {
     border: 2px solid #198754 !important;
     color: #198754 !important;

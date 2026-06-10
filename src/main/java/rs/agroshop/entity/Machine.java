@@ -1,25 +1,22 @@
 package rs.agroshop.entity;
 
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
-
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
-@Table(name  = "machine")
+@Table(name = "machine")
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Machine {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "machine_id")
@@ -35,26 +32,24 @@ public class Machine {
     private BigDecimal price;
 
     @Column(name = "release_year", nullable = false)
-    private  Integer releaseYear;
+    private Integer releaseYear;
 
     @Column(name = "icon_path", nullable = false, length = 255)
     private String iconPath;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "manufacturer_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
 
-    @OneToMany(mappedBy = "machine", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "machine", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("machine") // Sprečava beskonačnu petlju
     private Set<Specification> specifications = new HashSet<>();
 
-    @OneToMany(mappedBy = "machine", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "machine", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("machine") // Sprečava beskonačnu petlju
     private Set<Picture> pictures = new HashSet<>();
 }

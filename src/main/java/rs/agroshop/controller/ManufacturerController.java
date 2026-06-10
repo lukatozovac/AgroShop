@@ -28,17 +28,17 @@ public class ManufacturerController {
             return ResponseEntity.ok(manufacturers);
         }
         
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Manufacturer> getById(@PathVariable Integer id) {
-        try {
+        try{
             Manufacturer manufacturer = manufacturerService.findById(id);
             return ResponseEntity.ok(manufacturer);
         }
 
-        catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        catch(RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
@@ -51,13 +51,13 @@ public class ManufacturerController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdManufacturer);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during creating a new manufacturer: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -69,18 +69,18 @@ public class ManufacturerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateManufacturer(@PathVariable Integer id, @RequestBody Manufacturer manufacturerDetails) {
-        try {
+        try{
             Manufacturer updatedManufacturer = manufacturerService.updateManufacturer(id, manufacturerDetails);
             return ResponseEntity.ok(updatedManufacturer);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during updating manufacturer: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -92,20 +92,20 @@ public class ManufacturerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteManufacturer(@PathVariable Integer id) {
-        try {
+        try{
             manufacturerService.deleteManufacturer(id);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Manufacturer with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during deleting manufacturer: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

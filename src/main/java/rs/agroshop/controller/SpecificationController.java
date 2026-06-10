@@ -28,7 +28,7 @@ public class SpecificationController {
             return ResponseEntity.ok(specifications);
         }
         
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
@@ -38,7 +38,7 @@ public class SpecificationController {
             return ResponseEntity.ok(specification);
         }
         
-        catch (RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        catch(RuntimeException e){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
     }
 
     @GetMapping("/machine/{machineId}")
@@ -48,7 +48,7 @@ public class SpecificationController {
             return ResponseEntity.ok(specifications);
         }
         
-        catch (Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
 // --------------------------------------------------------------------------------------- //    
@@ -61,13 +61,13 @@ public class SpecificationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdSpecification);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during creating specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -84,13 +84,13 @@ public class SpecificationController {
             return ResponseEntity.ok(updatedSpecification);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during updating specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -102,20 +102,20 @@ public class SpecificationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSpecification(@PathVariable Integer id) {
-        try {
+        try{
             specificationService.deleteSpecification(id);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Specification with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
         
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
         
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during deleting specification: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

@@ -24,27 +24,27 @@ public class CategoryController {
     
     @GetMapping
     public ResponseEntity<List<Category>> getAll() {
-        try {
+        try{
             List<Category> categories = categoryService.findAll();
             return ResponseEntity.ok(categories);
         }
 
-        catch (Exception e) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/type/{type}")
     public ResponseEntity<List<Category>> getByType(@PathVariable CategoryType type) {
-        try {
+        try{
             List<Category> categories = categoryService.findByType(type);
             return ResponseEntity.ok(categories);
         }
 
-        catch (Exception e) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
+        catch(Exception e){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> getById(@PathVariable Integer id) {
-        try {
+        try{
             Category category = categoryService.findById(id);
             return ResponseEntity.ok(category);}
             catch (RuntimeException e) {
@@ -57,18 +57,18 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
-        try {
+        try{
             Category createdCategory = categoryService.createCategory(category);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
         }
 
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
          
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during creating categories: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -80,18 +80,18 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Integer id, @RequestBody Category categoryDetails) {
-        try {
+        try{
             Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
             return ResponseEntity.ok(updatedCategory);
         }
 
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
             
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during updating category: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -103,20 +103,20 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
-        try {
+        try{
             categoryService.deleteCategory(id);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Category with ID " + id + " has deleted successfully.");
             return ResponseEntity.ok(response);
         }
 
-        catch (RuntimeException e) {
+        catch(RuntimeException e){
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
 
-        catch (Exception e) {
+        catch(Exception e){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error during deleting category: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
