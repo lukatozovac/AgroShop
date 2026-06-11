@@ -1,27 +1,24 @@
 package rs.agroshop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import rs.agroshop.entity.Category;
 import rs.agroshop.entity.Machine;
 import rs.agroshop.entity.Manufacturer;
 import rs.agroshop.repo.CategoryRepository;
 import rs.agroshop.repo.MachineRepository;
 import rs.agroshop.repo.ManufacturerRepository;
-
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MachineService {
     
-    @Autowired
-    private MachineRepository machineRepository;
+    private final MachineRepository machineRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ManufacturerRepository manufacturerRepository;
+    private final ManufacturerRepository manufacturerRepository;
     
 // ----------------------------------------------------------------------------------- //
 // ----------------------------- Read operations ------------------------------------- //

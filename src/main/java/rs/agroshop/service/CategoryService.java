@@ -1,17 +1,17 @@
 package rs.agroshop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import rs.agroshop.entity.Category;
 import rs.agroshop.model.CategoryType;
 import rs.agroshop.repo.CategoryRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
 // ------------------------------------------------------------------------------- //    
 // ---------------------------- Read operations ---------------------------------- //

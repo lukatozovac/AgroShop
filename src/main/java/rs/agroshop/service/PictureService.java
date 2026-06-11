@@ -1,7 +1,7 @@
 package rs.agroshop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import rs.agroshop.entity.Picture;
 import rs.agroshop.entity.Machine;
 import rs.agroshop.repo.PictureRepository;
@@ -9,13 +9,12 @@ import rs.agroshop.repo.MachineRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PictureService {
     
-    @Autowired
-    private PictureRepository pictureRepository;
+    private final PictureRepository pictureRepository;
     
-    @Autowired
-    private MachineRepository machineRepository;
+    private final MachineRepository machineRepository;
 
 // -------------------------------------------------------------------------- //    
 // ------------------------- Read operations -------------------------------- //    

@@ -1,9 +1,9 @@
 package rs.agroshop.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 import rs.agroshop.entity.Manufacturer;
 import rs.agroshop.service.ManufacturerService;
 import java.util.HashMap;
@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/manufacturers")
 @CrossOrigin(origins = "*")
 public class ManufacturerController {
     
-    @Autowired
-    private ManufacturerService manufacturerService;
+    private final ManufacturerService manufacturerService;
 
 // --------------------------------------------------------------------------------------- //    
 // ------------------------------ Get methods for read operations ------------------------ //
